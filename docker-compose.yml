@@ -1,0 +1,54 @@
+version: '2'
+
+services:
+  web:
+    build:
+      context: .
+
+    volumes:
+      - ./:/app
+
+    ports:
+      - 80:80
+
+    environment: &app_environment
+      MYSQL_HOSTNAME: mysql
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: password
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_DATABASE: db
+
+    links:
+      - mysql-5.7.15
+      - mysql-5.7.17
+
+  mysql-5.7.15:
+    mem_limit: 1000000000
+    image: mysql:5.7.15
+
+    volumes:
+      - ./data:/docker-entrypoint-initdb.d/
+      - ./mysqlconf:/etc/mysql/conf.d
+
+    environment: *app_environment
+
+
+  mysql-5.7.17:
+    mem_limit: 1000000000
+    image: mysql:5.7.17
+
+    volumes:
+      - ./data:/docker-entrypoint-initdb.d/
+      - ./mysqlconf:/etc/mysql/conf.d
+
+    environment: *app_environment
+
+  mysql-5.7.17-novol:
+    mem_limit: 1000000000
+    image: mysql:5.7.17
+
+    volumes:
+      - ./data:/docker-entrypoint-initdb.d/
+      #- ./mysqlconf:/etc/mysql/conf.d
+
+    environment: *app_environment
